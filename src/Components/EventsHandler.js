@@ -15,6 +15,7 @@ export default class EventsHandler extends Component {
         this.state = {
           events: [],
           loading: true,
+          isToday: false
         };
       }
      async componentDidMount () {
@@ -28,13 +29,15 @@ export default class EventsHandler extends Component {
         })
       })
     }
+    
     render() {
+      
       // displays custom block if either data is loading or no results found
       if (this.state.loading || !this.state.events.items) {
         return (
           <div>
             <section className="sm:w-auto md:w-3/6 md:max-w-medium m-auto flex flex-wrap mt-20 bg-gray-100 shadow-lg">
-              <div className="bg-red-500 w-full pl-10 py-5 rounded rounded-b-none text-white border-b-2 border-red-700">
+              <div className="bg-red-500 w-full py-5 rounded rounded-b-none text-white border-b-2 border-red-700">
                 <h2 className="z-10 relative text-2xl absolute text-white text-center"><b>
                   {(this.state.loading) ? 'Loading events...' : 'No events!'}</b></h2>
               </div>
@@ -50,22 +53,28 @@ export default class EventsHandler extends Component {
           </div>
         )
       }
+      
       return (
+        
         <div>
           {this.state.events.items.map((event) => {
+            const isToday = moment(event.start.dateTime).isSame(moment().toISOString(), 'day');
+            const eStart = () => {return moment(event.start.dateTime).format("h:mm A")}
+            const eEnd = () => {return moment(event.end.dateTime).format("h:mm A")}
+  
             return (
               <div key={event.id}>
                 <section className="sm:w-1/1 md:w-3/6 md:max-w-medium m-auto flex flex-wrap mt-20 bg-gray-100 shadow-lg">
                   <div className="bg-red-500 w-full pl-10 py-5 rounded rounded-b-none text-white border-b-2 border-red-700">
                     <a href={event.htmlLink}><h2 className="text-2xl py-2"><u><b>{event.summary}</b></u></h2></a>
                     <span className="text-gray-100"><MdDateRange className="float-left mr-3 mt-1" />
-                      {(moment(event.start.dateTime).isSame(moment().toISOString(), 'day'))
-                        ? 'Today @ ' + moment(event.start.dateTime).format("h:mm A") + ' - ' + moment(event.end.dateTime).format("h:mm A")
-                        : moment(event.start.dateTime).format("ddd, MMMM Do, h:mm A") + ' - ' + moment(event.end.dateTime).format("h:mm A")}
+                      {((isToday)
+                        ? `Today @ ${eStart()} - ${eEnd()}`
+                        : moment(event.start.dateTime).format("ddd, MMMM Do, h:mm A") + ` - ${eEnd()}`)}
                     </span><br />
                     <MdSchedule className="float-left mr-3 mt-1" />Event begins {moment(event.start.dateTime).fromNow()}<br />
                   </div>
-                  <div className="flex flex-wrap ">
+                  <div className={"flex flex-wrap " + ((!isToday) ? "" : "")}>
                     <div className="pl-10 py-5">{(event.description.indexOf("Free") === -1) ? ''
                       : <span className="bg-red-400 px-3 py-1 rounded text-white"><b>Free</b></span>}
                     </div>
@@ -75,6 +84,9 @@ export default class EventsHandler extends Component {
                     </div>
                     <a className="text-center m-auto mb-5 bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" href={event.location}><MdLink className="float-left mr-3 mt-1" />Attend This Event</a>
                   </div>
+                  
+                  
+                  
                 </section>
               </div>
             )
