@@ -1,0 +1,7 @@
+{
+    "clientId": "CALENDAR_ID", 
+    "apiKey": "API_KEY",
+    "scope": "https://www.googleapis.com/auth/calendar",
+    "discoveryDocs": ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
+    "calendarURL": "https://calendar.google.com/calendar/embed?src={clientId}"
+}
