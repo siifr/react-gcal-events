@@ -5,7 +5,7 @@ import { MdLink, MdDateRange, MdSchedule, MdSubject} from "react-icons/md";
 
 const apiConf = require('../apiGoogleconfig.json');
 
-const url = `https://www.googleapis.com/calendar/v3/calendars/${apiConf.clientId}/events?key=${apiConf.apiKey}&orderBy=startTime&maxResults=5&singleEvents=true&timeMin=${moment().toISOString()}`
+const url = `https://www.googleapis.com/calendar/v3/calendars/${apiConf.clientId}/events?key=${apiConf.apiKey}&orderBy=startTime&maxResults=${apiConf.maxResults}&singleEvents=true&timeMin=${moment().toISOString()}`
 
 export default class EventsHandler extends Component {
 
@@ -60,10 +60,10 @@ export default class EventsHandler extends Component {
                     <a href={event.htmlLink}><h2 className="text-2xl py-2"><u><b>{event.summary}</b></u></h2></a>
                     <span className="text-gray-100"><MdDateRange className="float-left mr-3 mt-1" />
                       {(moment(event.start.dateTime).isSame(moment().toISOString(), 'day'))
-                        ? 'Happening Today! @ ' + moment(event.start.dateTime).format("h:mm A") + ' - ' + moment(event.end.dateTime).format("h:mm A")
+                        ? 'Today @ ' + moment(event.start.dateTime).format("h:mm A") + ' - ' + moment(event.end.dateTime).format("h:mm A")
                         : moment(event.start.dateTime).format("ddd, MMMM Do, h:mm A") + ' - ' + moment(event.end.dateTime).format("h:mm A")}
                     </span><br />
-                    <MdSchedule className="float-left mr-3 mt-1" />Event Begins: {moment(event.start.dateTime).fromNow()}<br />
+                    <MdSchedule className="float-left mr-3 mt-1" />Event begins {moment(event.start.dateTime).fromNow()}<br />
                   </div>
                   <div className="flex flex-wrap ">
                     <div className="pl-10 py-5">{(event.description.indexOf("Free") === -1) ? ''
