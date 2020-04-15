@@ -14,7 +14,7 @@ export default class AppNav extends Component {
             <span className="font-semibold text-2xl tracking-tight">Connected | From a Distance</span>
           </div>
           
-          <div className="flex items-center text-center sm:m-auto md:mr-5 flex-wrap text-white">
+          <div className="flex flex-wrap items-center text-center sm:m-auto md:mr-5 text-white">
             
             <a className="bg-red-400 hover:bg-red-300 font-bold py-2 sm:mt-5 md:m-auto px-4 border-b-4 border-red-600 hover:border-red-400 rounded" href={apiConf.calendarURL}>View Calendar</a>
            

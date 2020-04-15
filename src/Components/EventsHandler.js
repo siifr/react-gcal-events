@@ -5,7 +5,7 @@ import { MdLink, MdDateRange, MdSchedule, MdSubject} from "react-icons/md";
 
 const apiConf = require('../apiGoogleconfig.json');
 
-const url = `https://www.googleapis.com/calendar/v3/calendars/${apiConf.clientId}/events?key=${apiConf.apiKey}&orderBy=startTime&maxResults=${apiConf.maxResults}&singleEvents=true&timeMin=${moment().toISOString()}`
+const url = `https://www.googleapis.com/calendar/v3/calendars/${apiConf.clientId}/events?key=${apiConf.apiKey}&orderBy=startTime&maxResults=5&singleEvents=true&timeMin=${moment().toISOString()}`
 
 export default class EventsHandler extends Component {
 
@@ -59,9 +59,15 @@ export default class EventsHandler extends Component {
         <div>
           {this.state.events.items.map((event) => {
             const isToday = moment(event.start.dateTime).isSame(moment().toISOString(), 'day');
-            const eStart = () => {return moment(event.start.dateTime).format("h:mm A")}
-            const eEnd = () => {return moment(event.end.dateTime).format("h:mm A")}
-  
+            const eStart = () => {return moment(event.start.dateTime).format("h:mm A")};
+            const eEnd = () => {return moment(event.end.dateTime).format("h:mm A")};
+            if(!event.description){
+              event.description = "No description";
+            }
+            if(event.location.indexOf("http://" || "https://")  === -1) {
+              event.location = "https://" + event.location;
+            }
+            
             return (
               <div key={event.id}>
                 <section className="sm:w-1/1 md:w-3/6 md:max-w-medium m-auto flex flex-wrap mt-20 bg-gray-100 shadow-lg">
@@ -71,19 +77,21 @@ export default class EventsHandler extends Component {
                       {((isToday)
                         ? `Today @ ${eStart()} - ${eEnd()}`
                         : moment(event.start.dateTime).format("ddd, MMMM Do, h:mm A") + ` - ${eEnd()}`)}
-                    </span><br />
+                    </span><br/>
                     <MdSchedule className="float-left mr-3 mt-1" />Event begins {moment(event.start.dateTime).fromNow()}<br />
                   </div>
-                  <div className={"flex flex-wrap " + ((!isToday) ? "" : "")}>
-                    <div className="pl-10 py-5">{(event.description.indexOf("Free") === -1) ? ''
-                      : <span className="bg-red-400 px-3 py-1 rounded text-white"><b>Free</b></span>}
+                  <div className="w-full">
+                    <div className="pl-10 py-5">{((event.description.indexOf("Free") === -1) ? ''
+                      : <span className="bg-red-400 px-3 py-1 rounded text-white"><b>Free</b></span>)}
                     </div>
-                    <div className="mb-5 px-10 pb-10 pt-5 rounded">
+                    <div className="mb-5 px-10 pb-10 pt-5 w-full rounded">
                       <MdSubject className="float-left mr-3 mt-1" />
-                      <p className="text-gray-700 flex flex-wrap whitespace-normal">{event.description}</p>
+                      <p className="text-gray-700 flex flex-wrap">{event.description}</p>
                     </div>
-                    <a className="text-center m-auto mb-5 bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" href={event.location}><MdLink className="float-left mr-3 mt-1" />Attend This Event</a>
                   </div>
+                  <div className="flex flex-auto m-auto">
+                    <a className="m-auto mb-5 text-center bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" href={event.location}><MdLink className="float-left mr-3 mt-1" />Attend This Event</a>
+                    </div>
                   
                   
                   
