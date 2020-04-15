@@ -5,7 +5,7 @@ import { MdLink, MdDateRange, MdSchedule, MdSubject} from "react-icons/md";
 
 const apiConf = require('../apiGoogleconfig.json');
 
-const url = `https://www.googleapis.com/calendar/v3/calendars/${apiConf.clientId}/events?key=${apiConf.apiKey}&orderBy=startTime&maxResults=5&singleEvents=true&timeMin=${moment().toISOString()}`
+const url = `https://www.googleapis.com/calendar/v3/calendars/${apiConf.clientId}/events?key=${apiConf.apiKey}&orderBy=startTime&maxResults=${apiConf.maxResults}&singleEvents=true&timeMin=${moment().toISOString()}`
 
 export default class EventsHandler extends Component {
 
@@ -61,6 +61,7 @@ export default class EventsHandler extends Component {
             const isToday = moment(event.start.dateTime).isSame(moment().toISOString(), 'day');
             const eStart = () => {return moment(event.start.dateTime).format("h:mm A")};
             const eEnd = () => {return moment(event.end.dateTime).format("h:mm A")};
+            
             if(!event.description){
               event.description = "No description";
             }
