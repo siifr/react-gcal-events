@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import moment from 'moment';
-import { MdLink, MdDateRange, MdSchedule, MdSubject} from "react-icons/md";
+import { MdLink, MdDateRange, MdSchedule, MdSubject } from "react-icons/md";
 
 const apiConf = require('../apiGoogleconfig.json');
 
@@ -63,10 +63,14 @@ export default class EventsHandler extends Component {
             if(!event.description){
               event.description = "No description";
             }
-            if(event.location.indexOf("http://") || event.location.indexOf("http://")  === -1) {
-              event.location = "https://" + event.location;
+
+            if(!event.location.includes('https://' || 'https://')) {
+              event.location = "https://" + event.location; //replaces link with https
             }
             
+            event.description = event.description.replace(/<[^>]+>/g, ''); //removes html tags
+            
+
             return (
               <div key={event.id}>
                 <section className="sm:w-1/1 md:w-3/6 md:max-w-medium m-auto flex flex-wrap mt-20 bg-gray-100 shadow-lg">
@@ -80,7 +84,7 @@ export default class EventsHandler extends Component {
                     <MdSchedule className="float-left mr-3 mt-1" />Event begins {moment(event.start.dateTime).fromNow()}<br />
                   </div>
                   <div className="w-full">
-                    <div className="pl-10 py-5">{((event.description.indexOf("Free") === -1) ? ''
+                    <div className="pl-10 py-5">{(event.description.includes("Free") ? ''
                       : <span className="bg-red-400 px-3 py-1 rounded text-white"><b>Free</b></span>)}
                     </div>
                     <div className="mb-5 px-10 pb-10 pt-5 w-full rounded">
