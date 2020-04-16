@@ -53,9 +53,7 @@ export default class EventsHandler extends Component {
           </div>
         )
       }
-      
       return (
-        
         <div>
           {this.state.events.items.map((event) => {
             const isToday = moment(event.start.dateTime).isSame(moment().toISOString(), 'day');
@@ -65,7 +63,7 @@ export default class EventsHandler extends Component {
             if(!event.description){
               event.description = "No description";
             }
-            if(event.location.indexOf("http://" || "https://")  === -1) {
+            if(event.location.indexOf("http://") || event.location.indexOf("http://")  === -1) {
               event.location = "https://" + event.location;
             }
             
@@ -78,7 +76,7 @@ export default class EventsHandler extends Component {
                       {((isToday)
                         ? `Today @ ${eStart()} - ${eEnd()}`
                         : moment(event.start.dateTime).format("ddd, MMMM Do, h:mm A") + ` - ${eEnd()}`)}
-                    </span><br/>
+                    </span><br />
                     <MdSchedule className="float-left mr-3 mt-1" />Event begins {moment(event.start.dateTime).fromNow()}<br />
                   </div>
                   <div className="w-full">
@@ -92,10 +90,7 @@ export default class EventsHandler extends Component {
                   </div>
                   <div className="flex flex-auto m-auto">
                     <a className="m-auto mb-5 text-center bg-red-500 hover:bg-red-400 text-white font-bold py-2 px-4 border-b-4 border-red-700 hover:border-red-500 rounded" href={event.location}><MdLink className="float-left mr-3 mt-1" />Attend This Event</a>
-                    </div>
-                  
-                  
-                  
+                  </div>
                 </section>
               </div>
             )
