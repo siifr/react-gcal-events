@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { format, parseISO, formatDistanceToNow, formatDistance, isToday } from 'date-fns';
+import { format, parseISO, formatDistance, formatDistanceStrict, isToday } from 'date-fns';
 import { MdLink, MdDateRange, MdSchedule, MdSubject } from "react-icons/md";
 
 const curTime = new Date();
@@ -18,7 +18,6 @@ export default class EventsHandler extends Component {
       eventsToday: ''
     };
   }
-
   async componentDidMount() {
     var maxResults = this.state.defaultEvents;
     (!this.state.eventsToday) ? maxResults = this.state.defaultEvents : maxResults = this.state.eventsToday
@@ -32,12 +31,7 @@ export default class EventsHandler extends Component {
           events: json,
         })
       });
-
-
   }
-
-
-
   render() {
     //unused
     let urlOptions = {
@@ -76,15 +70,14 @@ export default class EventsHandler extends Component {
           const eEnd = () => { return format(endTime, "h:mm a") };
 
           if (!event.description) {
-            event.description = "No description";
+            event.description = `No description provided, please see Event details ${<a href={event.htmlLink}>here</a>}`; //if no description provided, replace string
           }
-          if (!event.location.includes('http://' || 'https://')) {
-            event.location = "https://" + event.location; //replaces link with https
+          if (!event.location) {
+            event.location = event.htmlLink; // if no link provided, replace with event calendar link
           }
-          const descFormat = {
-            html: "/<[^>]+>/g, ''",
-            spaces: "/&nbsp;/g, ' '"
-          }
+          // if (event.location.includes("http://")) {
+          //   event.location = event.location.replace(/^http/g, "https")
+          // }
 
           event.description = event.description.replace(/<[^>]+>/g, ''); //removes html tag
           event.description = event.description.replace(/&nbsp;/g, ' '); //removes non-break spaces tag
@@ -95,15 +88,17 @@ export default class EventsHandler extends Component {
                 <div className="bg-red-500 w-full px-10 py-5 rounded rounded-b-none text-white border-b-2 border-red-700">
                   <a target="_blank" rel="noopener noreferrer" href={event.htmlLink}><h2 className="text-2xl py-2"><u><b>{event.summary}</b></u></h2></a>
                   <span className="text-gray-100"><MdDateRange className="float-left mr-3 mt-1" />
-                    {(isToday(startTime)
-                      ? `Today @ ${eStart()} - ${eEnd()}`
-                      : `${format(startTime, "EEE MMMM do, h:mm a")} - ${eEnd()}`)}
+                    {
+                      isToday(startTime)
+                        ? `Today @ ${eStart()} - ${eEnd()}`
+                        : `${format(startTime, "EEE MMMM do, h:mm a")} - ${eEnd()}`
+                    }
                   </span><br />
                   <MdSchedule className="float-left mr-3 mt-1" />
                   {
-                    ((curTime <= endTime && isToday(endTime))) //if curTime isBefore endTime of event
+                    (curTime >= startTime && isToday(startTime)) //if curTime isBefore endTime of event
                       ? `Happening now: ${formatDistance(curTime, endTime)} remaining` //display happening now till event end
-                      : `Event begins ${formatDistanceToNow(startTime, { addSuffix: true })}` //display roughly how much time until event start
+                      : `Event begins in ${formatDistanceStrict(curTime, startTime)}` //display roughly how much time until event start 
                   }
                   <br />
                 </div>
