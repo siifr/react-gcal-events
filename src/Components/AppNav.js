@@ -8,7 +8,7 @@ export default class AppNav extends Component {
      
     return (
       <div>
-        <nav className="flex items-center justify-between flex-wrap bg-red-500 p-6">
+        <nav className="flex z-50 items-center justify-between flex-wrap bg-red-500 border-b-4 border-red-600 p-6">
           <div className="flex items-center flex-shrink-0 text-white mr-6">
           <MdPersonPin className="mt-1 mx-2 text-3xl " />
           <a target="_blank" rel="noopener noreferrer" href="/"><span className="font-semibold text-2xl tracking-tight">Connected | From a Distance</span></a>
