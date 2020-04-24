@@ -72,6 +72,7 @@ Save that file and run the following command to build the project:
 `
 npm run build
 `
+
 That will compile the code into the build folder.
 This process might take a few moments as it compiles tailwind into styles/App.css.
 
